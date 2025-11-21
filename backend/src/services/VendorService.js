@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const VendorModel = require("../models/VendorModel");
+const CacheService = require("./CacheService");
 
 /**
  * VendorService - Business Logic Layer
@@ -45,6 +46,10 @@ class VendorService {
     // Create vendor
     const newVendor = await VendorModel.create(vendorData);
 
+    // Invalidate cache after creating new vendor
+    await CacheService.del("vendor_hierarchy");
+    console.log("Cache invalidated: vendor_hierarchy");
+
     // Remove password_hash from response
     delete newVendor.password_hash;
 
@@ -57,7 +62,18 @@ class VendorService {
    * @returns {Promise<Array>} Hierarchy tree
    */
   async getHierarchy() {
-    // Fetch all vendors
+    const cacheKey = "vendor_hierarchy";
+
+    // Try to get from cache first
+    const cachedData = await CacheService.get(cacheKey);
+    if (cachedData) {
+      console.log("CACHE HIT: vendor_hierarchy");
+      return cachedData;
+    }
+
+    console.log("CACHE MISS: vendor_hierarchy");
+
+    // Fetch all vendors from database
     const vendors = await VendorModel.findAll();
 
     // Build tree in O(N) time using Map
@@ -82,6 +98,9 @@ class VendorService {
         vendorMap[vendor.parent_id].children.push(vendorMap[vendor.id]);
       }
     }
+
+    // Cache the result for 10 minutes (600 seconds)
+    await CacheService.set(cacheKey, roots, 600);
 
     return roots;
   }
