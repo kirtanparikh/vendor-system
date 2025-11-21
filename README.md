@@ -8,15 +8,15 @@
 - **Caching**: Redis
 - **Authentication**: JWT (JSON Web Tokens)
 - **Architecture**: MVC with Controller-Service-Repository Pattern
-- **Language**: TypeScript/JavaScript
+- **Language**: JavaScript
 
 ## Prerequisites
 
 Before running this application, ensure you have the following installed:
 
 - **Node.js** (v16 or higher)
-- **npm** or **yarn**
-- **PostgreSQL** or **MongoDB** (depending on configuration)
+- **npm**
+- **PostgreSQL**
 - **Redis** (for caching layer)
 - **Git** (for version control)
 
@@ -25,7 +25,7 @@ Before running this application, ensure you have the following installed:
 1. **Clone the repository**
 
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/kirtanparikh/vendor-system.git
    cd vendor-system
    ```
 
