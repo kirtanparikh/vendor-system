@@ -3,6 +3,9 @@ const cors = require("cors");
 const morgan = require("morgan");
 require("dotenv").config();
 
+// Import routes
+const vendorRoutes = require("./src/routes/vendorRoutes");
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -29,28 +32,38 @@ app.get("/", (req, res) => {
     version: "1.0.0",
     endpoints: {
       health: "/health",
-      api: "/api/v1",
+      vendors: "/api/vendors",
+      hierarchy: "/api/vendors/hierarchy",
     },
   });
 });
 
-// API routes will be added here
-// app.use('/api/v1', require('./src/routes'));
+// Mount API routes
+app.use("/api/vendors", vendorRoutes);
 
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({
+    success: false,
     error: "Not Found",
     message: `Cannot ${req.method} ${req.path}`,
   });
 });
 
-// Error handler
+// Global Error Handler
 app.use((err, req, res, next) => {
-  console.error("Error:", err);
-  res.status(err.status || 500).json({
-    error: err.message || "Internal Server Error",
-    ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
+  console.error("Error:", err.message);
+
+  const statusCode = err.statusCode || err.status || 500;
+  const message = err.message || "Internal Server Error";
+
+  res.status(statusCode).json({
+    success: false,
+    error: message,
+    ...(process.env.NODE_ENV === "development" && {
+      stack: err.stack,
+      details: err,
+    }),
   });
 });
 

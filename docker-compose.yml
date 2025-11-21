@@ -57,9 +57,6 @@ services:
         condition: service_healthy
     networks:
       - vendor-network
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
     restart: unless-stopped
 
 volumes:
