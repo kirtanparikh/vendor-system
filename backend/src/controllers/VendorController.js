@@ -25,13 +25,14 @@ class VendorController {
       // Basic validation
       if (!name || !email || !password) {
         return res.status(400).json({
+          success: false,
           error: "Validation Error",
           message: "Name, email, and password are required",
         });
       }
 
-      // Get requester ID from auth middleware (for now, use body or default to 1)
-      const requesterId = req.user?.id || parent_id || 1;
+      // Get requester ID from authenticated user
+      const requesterId = req.user?.id || 1;
 
       const vendorData = {
         name,

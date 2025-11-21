@@ -50,6 +50,7 @@ services:
       DB_PASSWORD: vendor_secure_pass
       REDIS_HOST: cache
       REDIS_PORT: 6379
+      JWT_SECRET: vendor_system_jwt_secret_key_change_in_production
     depends_on:
       db:
         condition: service_healthy

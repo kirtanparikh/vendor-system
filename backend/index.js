@@ -4,6 +4,7 @@ const morgan = require("morgan");
 require("dotenv").config();
 
 // Import routes
+const authRoutes = require("./src/routes/authRoutes");
 const vendorRoutes = require("./src/routes/vendorRoutes");
 
 const app = express();
@@ -32,6 +33,7 @@ app.get("/", (req, res) => {
     version: "1.0.0",
     endpoints: {
       health: "/health",
+      auth: "/api/auth/login",
       vendors: "/api/vendors",
       hierarchy: "/api/vendors/hierarchy",
     },
@@ -39,6 +41,7 @@ app.get("/", (req, res) => {
 });
 
 // Mount API routes
+app.use("/api/auth", authRoutes);
 app.use("/api/vendors", vendorRoutes);
 
 // 404 handler

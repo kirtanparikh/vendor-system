@@ -91,7 +91,7 @@ VALUES (
     'admin',
     '{"canCreateVendors": true, "canDeleteVendors": true, "canManageRoles": true, "canViewAll": true}',
     'admin@vendorsystem.com',
-    '$2a$10$rZ5YvCqOXXCnEqF0JXQ7ZOYxBXqXLFfqJKZ6xGZQ8XqQ8XqQ8XqQ8',
+    '$2b$10$Ef1LDZKk/OvV4UizBl.4S.X/ejrdHq/KuPr8FejjMiQ3uKkeYDOje',
     '+1234567890',
     'active'
 );

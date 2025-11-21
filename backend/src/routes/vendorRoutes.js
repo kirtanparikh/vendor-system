@@ -1,14 +1,15 @@
 const express = require("express");
 const VendorController = require("../controllers/VendorController");
+const { authenticateToken } = require("../middleware/AuthMiddleware");
 
 const router = express.Router();
 
 /**
  * @route   POST /api/vendors
  * @desc    Create a new sub-vendor
- * @access  Protected (will be protected after auth implementation)
+ * @access  Protected
  */
-router.post("/", (req, res, next) =>
+router.post("/", authenticateToken, (req, res, next) =>
   VendorController.createSubVendor(req, res, next)
 );
 
