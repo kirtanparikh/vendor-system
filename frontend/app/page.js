@@ -4,8 +4,13 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import Cookies from "js-cookie";
 import { LogOut, TreePine } from "lucide-react";
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import Tree from "react-d3-tree";
+
+const Tree = dynamic(() => import("react-d3-tree"), {
+  ssr: false,
+  loading: () => <div className="text-center p-4">Loading Graph...</div>,
+});
 
 export default function Dashboard() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -209,26 +214,48 @@ export default function Dashboard() {
         </div>
       </nav>
 
-      <div className="h-[calc(100vh-4rem)]">
+      <div style={{ width: "100vw", height: "100vh" }}>
         {loading ? (
-          <div className="flex items-center justify-center h-full">
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             <div className="text-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
               <p className="mt-4 text-gray-600">Loading hierarchy...</p>
             </div>
           </div>
         ) : treeData.length > 0 ? (
-          <Tree
-            data={treeData}
-            orientation="vertical"
-            pathFunc="step"
-            translate={{ x: 400, y: 100 }}
-            nodeSize={{ x: 200, y: 200 }}
-            renderCustomNodeElement={renderCustomNode}
-            separation={{ siblings: 1.5, nonSiblings: 2 }}
-          />
+          <div style={{ width: "100%", height: "100%" }}>
+            <Tree
+              data={treeData}
+              orientation="vertical"
+              pathFunc="step"
+              translate={{
+                x: typeof window !== "undefined" ? window.innerWidth / 2 : 400,
+                y: 100,
+              }}
+              nodeSize={{ x: 220, y: 220 }}
+              renderCustomNodeElement={renderCustomNode}
+              separation={{ siblings: 2, nonSiblings: 2.5 }}
+              enableLegacyTransitions={true}
+            />
+          </div>
         ) : (
-          <div className="flex items-center justify-center h-full">
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             <p className="text-gray-500">No vendor data available</p>
           </div>
         )}
