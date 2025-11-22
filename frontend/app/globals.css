@@ -1,1 +1,5 @@
 @import "tailwindcss";
+
+* {
+  font-weight: 400;
+}
