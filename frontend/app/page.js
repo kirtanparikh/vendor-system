@@ -7,21 +7,12 @@ import { LogOut, TreePine } from "lucide-react";
 import { useEffect, useState } from "react";
 import Tree from "react-d3-tree";
 
-interface VendorNode {
-  name: string;
-  attributes?: {
-    role: string;
-    email: string;
-  };
-  children?: VendorNode[];
-}
-
 export default function Dashboard() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [treeData, setTreeData] = useState<VendorNode[]>([]);
+  const [treeData, setTreeData] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -32,7 +23,7 @@ export default function Dashboard() {
     }
   }, []);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
@@ -50,14 +41,14 @@ export default function Dashboard() {
       Cookies.set("token", token, { expires: 1 });
       setIsLoggedIn(true);
       fetchHierarchy(token);
-    } catch (err: any) {
+    } catch (err) {
       setError(err.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchHierarchy = async (token: string) => {
+  const fetchHierarchy = async (token) => {
     setLoading(true);
     try {
       const response = await axios.get(
@@ -69,7 +60,7 @@ export default function Dashboard() {
         }
       );
 
-      setTreeData(response.data.hierarchy);
+      setTreeData(response.data.data);
     } catch (err) {
       setError("Failed to fetch vendor hierarchy");
     } finally {
@@ -85,7 +76,7 @@ export default function Dashboard() {
     setPassword("");
   };
 
-  const renderCustomNode = ({ nodeDatum }: any) => (
+  const renderCustomNode = ({ nodeDatum }) => (
     <g>
       <circle r={40} fill="#3b82f6" stroke="#1e40af" strokeWidth={2} />
       <text
@@ -124,7 +115,7 @@ export default function Dashboard() {
 
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
