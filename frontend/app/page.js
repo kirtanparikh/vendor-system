@@ -215,7 +215,7 @@ export default function Dashboard() {
       <div className="min-h-screen flex items-center justify-center bg-slate-100">
         <div className="bg-white p-8 rounded-xl shadow-lg w-96">
           <h1 className="text-2xl font-bold mb-6 text-slate-800 flex items-center gap-2">
-            <Layers className="text-blue-600" /> VendorOS
+            <Layers className="text-blue-600" /> Vendor System
           </h1>
           <form onSubmit={handleLogin} className="space-y-4">
             <input
@@ -243,7 +243,7 @@ export default function Dashboard() {
     <div className="h-screen w-screen flex flex-col bg-slate-50 overflow-hidden font-sans">
       <nav className="h-14 bg-white border-b px-6 flex justify-between items-center shrink-0 z-10">
         <div className="font-bold text-lg flex items-center gap-2 text-slate-800">
-          <Layers className="text-blue-600" /> VendorOS
+          <Layers className="text-blue-600" /> Vendor System
         </div>
         <button
           onClick={() => {
