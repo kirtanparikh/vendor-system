@@ -14,7 +14,7 @@ class VendorService {
     const vendorData = {
       name: data.name,
       parent_id: data.parent_id || requesterId,
-      role: data.role || "vendor",
+      role: data.role || "SUB_VENDOR",
       permissions: data.permissions || {},
       email: data.email,
       password: hashedPassword,
@@ -35,14 +35,11 @@ class VendorService {
       return cachedData;
     }
 
-    // Fetch all vendors from database
     const vendors = await VendorModel.findAll();
 
-    // Build tree in O(N) time using Map
     const vendorMap = {};
     const roots = [];
 
-    // First loop: Create map of all vendors
     for (const vendor of vendors) {
       vendorMap[vendor.id] = {
         ...vendor,
@@ -50,18 +47,14 @@ class VendorService {
       };
     }
 
-    // Second loop: Link children to parents
     for (const vendor of vendors) {
       if (vendor.parent_id === null) {
-        // Root node
         roots.push(vendorMap[vendor.id]);
       } else if (vendorMap[vendor.parent_id]) {
-        // Add to parent's children
         vendorMap[vendor.parent_id].children.push(vendorMap[vendor.id]);
       }
     }
 
-    // Fetch all drivers and attach them to their vendors
     const drivers = await VendorModel.findAllDrivers();
     for (const d of drivers) {
       const driverNode = {
@@ -81,7 +74,6 @@ class VendorService {
       }
     }
 
-    // Fetch all vehicles and attach them to their vendors
     const vehicles = await VendorModel.findAllVehicles();
     for (const v of vehicles) {
       const vehicleNode = {

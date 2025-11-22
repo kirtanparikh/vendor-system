@@ -109,7 +109,7 @@ export default function Dashboard() {
       Icon: Layers,
     };
 
-    if (role.includes("admin")) {
+    if (role.includes("super_vendor") || role === "super_vendor") {
       style = {
         border: "border-slate-800",
         bg: "bg-slate-900",
@@ -117,7 +117,7 @@ export default function Dashboard() {
         label: "HQ",
         Icon: ShieldCheck,
       };
-    } else if (role.includes("manager")) {
+    } else if (nodeDatum.parent_id === 2 && role.includes("sub_vendor")) {
       style = {
         border: "border-purple-500",
         bg: "bg-purple-50",
@@ -125,7 +125,7 @@ export default function Dashboard() {
         label: "REGION",
         Icon: MapPin,
       };
-    } else if (role.includes("vendor") || role.includes("city")) {
+    } else if (role.includes("sub_vendor")) {
       style = {
         border: "border-emerald-500",
         bg: "bg-emerald-50",
@@ -135,7 +135,6 @@ export default function Dashboard() {
       };
     }
 
-    // Driver Logic
     if (role.includes("driver")) {
       style = {
         border: "border-orange-500",
@@ -145,7 +144,6 @@ export default function Dashboard() {
         Icon: Truck,
       };
     }
-    // Vehicle Logic (If you added them)
     if (role.includes("vehicle")) {
       style = {
         border: "border-yellow-500",
@@ -156,7 +154,6 @@ export default function Dashboard() {
       };
     }
 
-    // 2. Determine Detail Text (Email vs License vs Model)
     let detailText = nodeDatum.email || nodeDatum.attributes?.email || "N/A";
 
     if (role.includes("driver")) {

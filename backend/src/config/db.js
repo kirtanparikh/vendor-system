@@ -7,8 +7,8 @@ const pool = new Pool({
   database: process.env.DB_NAME || "vendor_system",
   user: process.env.DB_USER || "vendor_admin",
   password: process.env.DB_PASSWORD || "vendor_secure_pass",
-  max: 20, // Maximum number of clients in the pool
-  idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
+  max: 20,
+  idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000,
 });
 

@@ -52,7 +52,6 @@ class RedisClient {
   }
 }
 
-// Create singleton instance
 const redisClient = new RedisClient();
 
 module.exports = redisClient;

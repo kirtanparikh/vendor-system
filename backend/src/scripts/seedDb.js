@@ -6,10 +6,8 @@ async function seedDatabase() {
   try {
     console.log("🌱 Starting Indian Context Seeding...");
 
-    // 1. Cleanup
     await client.query("TRUNCATE vendors, vehicles, drivers CASCADE");
 
-    // 2. Prepare Common Password (hash once for speed)
     const commonHash = await bcrypt.hash("password123", 10);
     const commonPerms = JSON.stringify({
       can_onboard_driver: true,
@@ -25,7 +23,6 @@ async function seedDatabase() {
     const rootId = rootRes.rows[0].id;
     console.log("✓ Created Root: India HQ");
 
-    // 4. Define Hierarchy Data
     const regions = [
       {
         name: "West Region (Mumbai HQ)",
@@ -38,7 +35,6 @@ async function seedDatabase() {
       { name: "North Region (Delhi HQ)", cities: ["Delhi NCR", "Jaipur"] },
     ];
 
-    // 5. Loops to insert data
     for (const region of regions) {
       const regRes = await client.query(
         `INSERT INTO vendors (name, email, password, role, parent_id, permissions)
@@ -67,7 +63,6 @@ async function seedDatabase() {
         );
         const cityId = cityRes.rows[0].id;
 
-        // Create 3 Drivers per City
         const driverNames = [
           "Ramesh",
           "Suresh",
@@ -92,7 +87,6 @@ async function seedDatabase() {
           );
         }
 
-        // Create 3 Vehicles per City
         const vehicleModels = ["Innova Crysta", "Ertiga", "Marazzo"];
         const stateCodes =
           city === "Delhi NCR" ? "DL" : city.substring(0, 2).toUpperCase();
