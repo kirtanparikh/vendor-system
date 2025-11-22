@@ -1,60 +1,50 @@
-# Vendor System
 
-Multi-level vendor hierarchy management system with N-level support, fleet tracking, and role-based access control.
+# Vendor Management System 
+
+A high-performance, containerized dashboard for managing complex **N-Level fleet hierarchies**. Designed to visualize relationships between Headquarters, Regional Offices, City Operations, and Drivers with sub-millisecond data retrieval.
 
 ## Tech Stack
 
-**Backend**
-
-- Node.js
-- Express.js
-- PostgreSQL
-- Redis
-- JWT Authentication
-
-**Frontend**
-
-- Next.js
-- React
-- Tailwind CSS
-- react-d3-tree
-
-**Architecture**: Controller-Service-Model Pattern
+- **Backend:** Node.js (Express) with Controller-Service-Repository Pattern
+- **Frontend:** Next.js, Tailwind CSS, React D3 Tree
+- **Database:** PostgreSQL
+- **Caching:** Redis 
+- **DevOps:** Docker & Docker Compose
 
 ## Quick Start
 
-**Prerequisites**: Docker & Docker Compose
+**Prerequisites:** Docker installed and running.
 
 ```bash
 git clone https://github.com/kirtanparikh/vendor-system.git
 cd vendor-system
+
+# Start the entire stack
 docker-compose up -d --build
+
+# Initialize Schema & Seed Data
+# (Populates the DB with a realistic Indian fleet hierarchy: Mumbai/Bangalore/Delhi)
 docker-compose exec api npm run init:db
 docker-compose exec api npm run seed
-```
+````
 
-**Access**:
+**Access Credentials:**
 
-- Frontend: http://localhost:3000
-- Backend: http://localhost:5000
-- Login: `admin@vendorsystem.com` / `admin123`
+  - **Frontend:** [http://localhost:3000](http://localhost:3000)
+  - **Backend:** [http://localhost:5000](http://localhost:5000/)
+  - **Login:** `admin@vendorsystem.com` / `password123`
 
-## Features
+## Key Features
 
-- **N-Level Vendor Hierarchy**: Unlimited depth parent-child relationships
-- **Fleet Management**: Vehicle and driver onboarding with assignments
-- **Permissions System**: Granular JSONB-based access control
-- **Redis Caching**: 10-minute TTL for hierarchy tree (O(N) build algorithm)
-- **Interactive Visualization**: D3 tree with node expansion/collapse
-- **Role-Based UI**: Dynamic rendering based on SUPER_VENDOR/SUB_VENDOR roles
+  - **N-Level Hierarchy:** Unlimited depth parent-child relationships (HQ → Region → City → Driver).
+  - **High-Performance Tree:** Implemented an **Iterative O(N) Hash Map algorithm** to construct the hierarchy without recursive DB queries.
+  - **Redis Caching:** Latency reduction on read-heavy dashboard loads.
+  - **RBAC Security:** Stateless JWT authentication with bcrypt password hashing.
+  - **Permissions System:** Flexible JSONB-based access control.
 
-## Architecture
+## Documentation
 
-Built with **ES6 Classes** following **Object-Oriented Principles**:
-
-- Controller layer handles HTTP requests
-- Service layer contains business logic
-- Model layer manages database queries
+For a deep dive into the architectural decisions, trade-offs, and cost estimation analysis, please see the **[System Design Document](https://github.com/kirtanparikh/vendor-system/blob/master/SYSTEM_DESIGN.md)** included in this repository.
 
 ## License
 
