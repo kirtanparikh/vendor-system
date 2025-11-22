@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import Cookies from "js-cookie";
-import { LogOut, Layers, MapPin, Truck, Activity, ShieldCheck, CreditCard, User } from "lucide-react";
+import { LogOut, Layers, MapPin, Truck, Activity, ShieldCheck } from "lucide-react";
 import { useEffect, useState } from "react";
 import dynamic from 'next/dynamic';
 
@@ -57,6 +57,7 @@ export default function Dashboard() {
       const response = await axios.get("http://localhost:5000/api/vendors/hierarchy", {
         headers: { Authorization: `Bearer ${token}` }
       });
+
       const data = response.data.data;
       setTreeData(data);
 
@@ -82,12 +83,16 @@ export default function Dashboard() {
   };
 
   // ---------------------------------------------------------
-  // 2. MODERN HTML CARD DESIGN (Using foreignObject)
+  // 2. FIXED CARD RENDERER (Accesses properties correctly)
   // ---------------------------------------------------------
   const renderCustomNode = ({ nodeDatum, toggleNode }) => {
-    const rawRole = (nodeDatum.attributes?.role || nodeDatum.role || "").toLowerCase();
+    // FIX 1: Access role from root OR attributes
+    const rawRole = (nodeDatum.role || nodeDatum.attributes?.role || "").toLowerCase();
 
-    // Design System
+    // FIX 2: Access ID and Email from root OR attributes
+    const displayId = nodeDatum.id || nodeDatum.attributes?.id || "NEW";
+    const displayEmail = nodeDatum.email || nodeDatum.attributes?.email || "no-email@system.com";
+
     let borderColor = "border-blue-500";
     let bgColor = "bg-blue-50";
     let textColor = "text-blue-700";
@@ -114,7 +119,6 @@ export default function Dashboard() {
       icon = <Activity className="w-4 h-4" />;
     }
 
-    // Driver Detection
     if (!nodeDatum.children || nodeDatum.children.length === 0) {
        if (rawRole.includes("driver") || !rawRole) {
            borderColor = "border-orange-500";
@@ -125,35 +129,34 @@ export default function Dashboard() {
        }
     }
 
-    // Use foreignObject to render real HTML/Tailwind inside SVG
     return (
       <foreignObject width="240" height="120" x="-120" y="-60">
         <div
-          className={`w-full h-full bg-white rounded-xl border-l-4 ${borderColor} shadow-lg flex flex-col justify-between p-3 cursor-pointer hover:scale-105 transition-transform duration-200`}
+          className={`w-full h-full bg-white rounded-xl border-l-4 ${borderColor} shadow-lg flex flex-col justify-between p-3 cursor-pointer hover:scale-105 transition-transform duration-200 font-sans`}
           onClick={toggleNode}
         >
-          {/* Header: Role Badge & ID */}
+          {/* Header */}
           <div className="flex justify-between items-start">
             <div className={`flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${bgColor} ${textColor}`}>
               {icon}
               <span>{label}</span>
             </div>
-            <div className="text-[10px] text-slate-400 font-mono">
-              #{nodeDatum.attributes?.id || "001"}
+            <div className="text-[10px] text-slate-400 font-mono font-bold">
+              #{displayId}
             </div>
           </div>
 
-          {/* Body: Name */}
+          {/* Body */}
           <div className="mt-1">
              <h3 className="text-sm font-bold text-slate-800 leading-tight">
                {nodeDatum.name.length > 22 ? nodeDatum.name.substring(0, 20) + "..." : nodeDatum.name}
              </h3>
-             <p className="text-[10px] text-slate-500 mt-0.5 truncate">
-               {nodeDatum.attributes?.email || "verified@system.com"}
+             <p className="text-[10px] text-slate-500 mt-0.5 truncate" title={displayEmail}>
+               {displayEmail}
              </p>
           </div>
 
-          {/* Footer: Status */}
+          {/* Footer */}
           <div className="flex items-center gap-2 mt-2 pt-2 border-t border-slate-100">
             <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
             <span className="text-[10px] font-medium text-slate-600">Active & Compliant</span>
@@ -197,7 +200,6 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col h-screen overflow-hidden font-sans text-slate-900">
-      {/* Navbar */}
       <nav className="bg-white border-b border-slate-200 px-6 h-16 flex justify-between items-center shrink-0 z-20">
         <div className="flex items-center gap-3">
           <div className="bg-blue-600 p-1.5 rounded text-white"><Layers className="w-5 h-5" /></div>
@@ -209,11 +211,10 @@ export default function Dashboard() {
       </nav>
 
       <div className="flex-1 relative">
-        {/* Stats Widget */}
         <div className="absolute top-6 left-6 z-10 bg-white/90 backdrop-blur p-4 rounded-xl shadow-sm border border-slate-200 w-64 space-y-3">
           <div className="flex items-center justify-between">
              <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Live Network</h3>
-             <div className="w-2 h-2 rounded-full bg-green-500"></div>
+             <div className="w-2 h-2 rounded-full bg-green-500 animate-ping"></div>
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div className="p-2 bg-slate-50 rounded-lg border border-slate-100">
@@ -236,7 +237,7 @@ export default function Dashboard() {
               orientation="vertical"
               pathFunc="step"
               translate={{ x: typeof window !== 'undefined' ? window.innerWidth / 2 : 400, y: 100 }}
-              nodeSize={{ x: 280, y: 200 }} // Wider spacing for the new cards
+              nodeSize={{ x: 280, y: 200 }}
               renderCustomNodeElement={renderCustomNode}
               separation={{ siblings: 1.2, nonSiblings: 1.5 }}
               enableLegacyTransitions={true}
