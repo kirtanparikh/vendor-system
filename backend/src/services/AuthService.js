@@ -7,10 +7,9 @@ class AuthService {
     const vendor = await VendorModel.findByEmail(email);
     const isPasswordValid = await bcrypt.compare(
       password,
-      vendor.password_hash
+      vendor.password
     );
 
-    // Generate JWT token
     const jwtSecret =
       process.env.JWT_SECRET || "default_secret_change_in_production";
     const token = jwt.sign(
@@ -25,7 +24,6 @@ class AuthService {
       }
     );
 
-    // Prepare user object (exclude password_hash)
     const user = {
       id: vendor.id,
       name: vendor.name,
@@ -33,8 +31,6 @@ class AuthService {
       role: vendor.role,
       permissions: vendor.permissions,
       parent_id: vendor.parent_id,
-      contact_number: vendor.contact_number,
-      status: vendor.status,
     };
 
     return { token, user };

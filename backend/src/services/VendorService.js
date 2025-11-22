@@ -11,25 +11,18 @@ class VendorService {
 
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
-    // Prepare vendor data
     const vendorData = {
       name: data.name,
       parent_id: data.parent_id || requesterId,
       role: data.role || "vendor",
       permissions: data.permissions || {},
       email: data.email,
-      password: hashedPassword, // Will be mapped to password_hash in model
-      contact_number: data.contact_number,
-      address: data.address,
+      password: hashedPassword,
     };
 
-    // Create vendor
     const newVendor = await VendorModel.create(vendorData);
 
     await CacheService.del("hierarchy_tree");
-
-    // Remove password_hash from response
-    delete newVendor.password_hash;
 
     return newVendor;
   }
@@ -78,7 +71,7 @@ class VendorService {
         attributes: {
           role: "driver",
           id: `D-${d.id}`,
-          license_number: d.license_number,
+          license_no: d.license_no,
         },
         children: [],
       };
@@ -93,7 +86,7 @@ class VendorService {
     for (const v of vehicles) {
       const vehicleNode = {
         id: `veh-${v.id}`,
-        name: v.vehicle_number,
+        name: v.reg_no,
         role: "vehicle",
         attributes: {
           role: "vehicle",

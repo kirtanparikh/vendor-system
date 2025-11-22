@@ -11,11 +11,11 @@ class VendorModel {
     const query = `
             INSERT INTO vendors (
                 name, parent_id, role, permissions,
-                email, password_hash, contact_number, address
+                email, password
             )
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            VALUES ($1, $2, $3, $4, $5, $6)
             RETURNING id, name, parent_id, role, permissions,
-                      email, contact_number, address, status, created_at
+                      email, created_at
         `;
 
     const values = [
@@ -24,9 +24,7 @@ class VendorModel {
       data.role,
       JSON.stringify(data.permissions || {}),
       data.email,
-      data.password, // Already hashed, mapped to password_hash
-      data.contact_number || null,
-      data.address || null,
+      data.password,
     ];
 
     const result = await pool.query(query, values);
@@ -35,8 +33,7 @@ class VendorModel {
 
   async findAll() {
     const query = `
-            SELECT id, name, parent_id, role, permissions, email,
-                   contact_number, status, created_at
+            SELECT id, name, parent_id, role, permissions, email, created_at
             FROM vendors
             ORDER BY id
         `;
@@ -52,7 +49,7 @@ class VendorModel {
 
   async findAllVehicles() {
     const query = `
-      SELECT id, vendor_id, vehicle_number, vehicle_type, model, status, created_at
+      SELECT id, vendor_id, reg_no, model, status
       FROM vehicles
       ORDER BY id
     `;
@@ -62,7 +59,7 @@ class VendorModel {
 
   async findAllDrivers() {
     const query =
-      "SELECT id, name, vendor_id, license_number, status FROM drivers ORDER BY id";
+      "SELECT id, name, vendor_id, license_no FROM drivers ORDER BY id";
     const result = await pool.query(query);
     return result.rows;
   }
