@@ -163,44 +163,23 @@ export default function Dashboard() {
     }
 
     return (
-      <foreignObject width="240" height="110" x="-120" y="-55">
+      <foreignObject width="220" height="90" x="-110" y="-45">
         <div
-          className={`w-full h-full bg-white rounded-lg border-l-4 ${style.border} shadow-md p-3 cursor-pointer hover:scale-105 transition flex flex-col justify-between`}
+          className={`w-full h-full bg-white rounded border-l-4 ${style.border} shadow p-2 cursor-pointer`}
           onClick={toggleNode}
         >
-          {/* Header: Badge & ID */}
-          <div className="flex justify-between items-start">
+          <div className="flex justify-between items-start mb-1">
             <div
-              className={`flex items-center gap-1 px-2 py-1 rounded text-[10px] font-bold uppercase ${style.bg} ${style.text}`}
+              className={`flex items-center gap-1 px-1 py-0.5 rounded text-[9px] font-bold ${style.bg} ${style.text}`}
             >
-              <style.Icon className="w-3 h-3" /> {style.label}
+              <style.Icon className="w-2.5 h-2.5" /> {style.label}
             </div>
-            <span className="text-[10px] text-slate-400 font-mono">#{id}</span>
+            <span className="text-[9px] text-slate-400">#{id}</span>
           </div>
-
-          {/* Body: Name & Details */}
-          <div>
-            <div
-              className="font-bold text-slate-800 text-sm truncate"
-              title={nodeDatum.name}
-            >
-              {nodeDatum.name}
-            </div>
-            <div
-              className="text-[10px] text-slate-500 truncate"
-              title={detailText}
-            >
-              {detailText}
-            </div>
+          <div className="font-bold text-slate-800 text-xs truncate">
+            {nodeDatum.name}
           </div>
-
-          {/* Footer: Status */}
-          <div className="flex items-center gap-1 pt-2 border-t border-slate-100">
-            <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
-            <span className="text-[9px] text-slate-400 font-medium uppercase">
-              Active
-            </span>
-          </div>
+          <div className="text-[9px] text-slate-500 truncate">{detailText}</div>
         </div>
       </foreignObject>
     );
@@ -208,27 +187,24 @@ export default function Dashboard() {
 
   if (!isLoggedIn)
     return (
-      /* ... Keep Login UI ... */
       <div className="min-h-screen flex items-center justify-center bg-slate-100">
-        <div className="bg-white p-8 rounded-xl shadow-lg w-96">
-          <h1 className="text-2xl font-bold mb-6 text-slate-800 flex items-center gap-2">
-            <Layers className="text-blue-600" /> Vendor System
-          </h1>
-          <form onSubmit={handleLogin} className="space-y-4">
+        <div className="bg-white p-6 rounded shadow w-80">
+          <h1 className="text-xl font-bold mb-4">Vendor System</h1>
+          <form onSubmit={handleLogin} className="space-y-3">
             <input
-              className="w-full p-2 border rounded text-slate-900"
+              className="w-full p-2 border rounded"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
             <input
-              className="w-full p-2 border rounded text-slate-900"
+              className="w-full p-2 border rounded"
               type="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <button className="w-full bg-slate-900 text-white p-2 rounded hover:bg-slate-800">
+            <button className="w-full bg-slate-900 text-white p-2 rounded">
               Login
             </button>
           </form>
@@ -237,33 +213,24 @@ export default function Dashboard() {
     );
 
   return (
-    <div className="h-screen w-screen flex flex-col bg-slate-50 overflow-hidden font-sans">
-      <nav className="h-14 bg-white border-b px-6 flex justify-between items-center shrink-0 z-10">
-        <div className="font-bold text-lg flex items-center gap-2 text-slate-800">
-          <Layers className="text-blue-600" /> Vendor System
-        </div>
+    <div className="h-screen w-screen flex flex-col bg-slate-50">
+      <nav className="h-12 bg-white border-b px-4 flex justify-between items-center">
+        <div className="font-bold">Vendor System</div>
         <button
           onClick={() => {
             Cookies.remove("token");
             setIsLoggedIn(false);
           }}
-          className="text-sm text-red-500 hover:underline"
+          className="text-sm text-red-500"
         >
           Logout
         </button>
       </nav>
-      <div className="flex-1 relative w-full h-full">
-        <div className="absolute top-4 left-4 bg-white/90 p-3 rounded-lg shadow border z-10 w-48">
-          <div className="text-[10px] font-bold text-slate-400 uppercase mb-2">
-            Overview
-          </div>
-          <div className="flex justify-between text-sm mb-1 text-slate-700">
-            <span>Regions</span>
-            <span className="font-bold">{stats.regions}</span>
-          </div>
-          <div className="flex justify-between text-sm text-slate-700">
-            <span>Fleet</span>
-            <span className="font-bold">{stats.drivers}</span>
+      <div className="flex-1 relative">
+        <div className="absolute top-2 left-2 bg-white p-2 rounded shadow z-10 text-xs">
+          <div className="flex gap-4">
+            <div>Regions: {stats.regions}</div>
+            <div>Fleet: {stats.drivers}</div>
           </div>
         </div>
         <Tree
@@ -271,7 +238,7 @@ export default function Dashboard() {
           orientation="vertical"
           pathFunc="step"
           translate={{ x: 600, y: 100 }}
-          nodeSize={{ x: 260, y: 180 }}
+          nodeSize={{ x: 240, y: 150 }}
           renderCustomNodeElement={renderCustomNode}
         />
       </div>
