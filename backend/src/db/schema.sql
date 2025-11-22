@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS drivers (
 INSERT INTO vendors (name, email, password, role, parent_id, permissions)
 VALUES (
     'Root Super Vendor',
-    'admin@cabsystem.com',
+    'admin@vendorsystem.com',
     '$2b$10$rKwLUKZ5E3jX9vQXqZ5vC.xN8hW7Kj6vL9pQ8tR3uV2wX4yZ6aB1C',
     'SUPER_VENDOR',
     NULL,

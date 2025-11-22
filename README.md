@@ -1,93 +1,60 @@
-# Vendor Management System
+# Vendor System
+
+Multi-level vendor hierarchy management system with N-level support, fleet tracking, and role-based access control.
 
 ## Tech Stack
 
-- **Runtime**: Node.js
-- **Framework**: Express.js
-- **Database**: PostgreSQL / MongoDB (configurable)
-- **Caching**: Redis
-- **Authentication**: JWT (JSON Web Tokens)
-- **Architecture**: MVC with Controller-Service-Repository Pattern
-- **Language**: JavaScript
+**Backend**
 
-## Prerequisites
+- Node.js
+- Express.js
+- PostgreSQL
+- Redis
+- JWT Authentication
 
-Before running this application, ensure you have the following installed:
+**Frontend**
 
-- **Node.js** (v16 or higher)
-- **npm**
-- **PostgreSQL**
-- **Redis** (for caching layer)
-- **Git** (for version control)
+- Next.js
+- React
+- Tailwind CSS
+- react-d3-tree
 
-## Installation
+**Architecture**: Controller-Service-Model Pattern
 
-1. **Clone the repository**
+## Quick Start
 
-   ```bash
-   git clone https://github.com/kirtanparikh/vendor-system.git
-   cd vendor-system
-   ```
+**Prerequisites**: Docker & Docker Compose
 
-2. **Install dependencies**
+```bash
+git clone https://github.com/kirtanparikh/vendor-system.git
+cd vendor-system
+docker-compose up -d --build
+docker-compose exec api npm run init:db
+docker-compose exec api npm run seed
+```
 
-   ```bash
-   npm install
-   ```
+**Access**:
 
-3. **Configure environment variables**
-
-   Create a `.env` file in the root directory:
-
-   ```env
-   NODE_ENV=development
-   PORT=3000
-
-   # Database Configuration
-   DB_HOST=localhost
-   DB_PORT=5432
-   DB_NAME=vendor_system
-   DB_USER=your_db_user
-   DB_PASSWORD=your_db_password
-
-   # Redis Configuration
-   REDIS_HOST=localhost
-   REDIS_PORT=6379
-
-   # JWT Configuration
-   JWT_SECRET=your_jwt_secret_key
-   JWT_EXPIRY=24h
-   ```
-
-4. **Run database migrations** (if applicable)
-
-   ```bash
-   npm run migrate
-   ```
-
-5. **Start the application**
-
-   Development mode:
-
-   ```bash
-   npm run dev
-   ```
-
-   Production mode:
-
-   ```bash
-   npm start
-   ```
+- Frontend: http://localhost:3000
+- Backend: http://localhost:5000
+- Login: `admin@vendorsystem.com` / `admin123`
 
 ## Features
 
-- N-Level Vendor Hierarchy Management
-- Role-Based Access Control (RBAC)
-- Redis Caching for Performance Optimization
-- RESTful API Architecture
-- Object-Oriented Design Principles
+- **N-Level Vendor Hierarchy**: Unlimited depth parent-child relationships
+- **Fleet Management**: Vehicle and driver onboarding with assignments
+- **Permissions System**: Granular JSONB-based access control
+- **Redis Caching**: 10-minute TTL for hierarchy tree (O(N) build algorithm)
+- **Interactive Visualization**: D3 tree with node expansion/collapse
+- **Role-Based UI**: Dynamic rendering based on SUPER_VENDOR/SUB_VENDOR roles
 
-> **Note on Technology Stack & Architecture** > This project was architected in **Node.js** to ensure a complete, production-grade implementation of all functional requirements (N-Level Hierarchy, Caching, RBAC). However, the system is strictly designed using **Object-Oriented Principles (OOPS)** and a **Controller-Service-Repository** pattern. This ensures a seamless logical transition to **Java Spring Boot**, which is my primary area of interest and a framework I am eager to adopt immediately upon joining.
+## Architecture
+
+Built with **ES6 Classes** following **Object-Oriented Principles**:
+
+- Controller layer handles HTTP requests
+- Service layer contains business logic
+- Model layer manages database queries
 
 ## License
 
