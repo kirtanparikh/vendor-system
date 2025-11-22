@@ -17,10 +17,9 @@ async function seedDatabase() {
       can_create_subvendor: true,
     });
 
-    // 3. Create Root: India Head (Super Vendor)
     const rootRes = await client.query(
-      `INSERT INTO vendors (name, email, password_hash, role, permissions, status)
-       VALUES ($1, $2, $3, 'admin', $4, 'active') RETURNING id`,
+      `INSERT INTO vendors (name, email, password, role, permissions)
+       VALUES ($1, $2, $3, 'SUPER_VENDOR', $4) RETURNING id`,
       ["MoveInSync India HQ", "admin@vendorsystem.com", commonHash, commonPerms]
     );
     const rootId = rootRes.rows[0].id;
@@ -41,10 +40,9 @@ async function seedDatabase() {
 
     // 5. Loops to insert data
     for (const region of regions) {
-      // Create Regional Vendor
       const regRes = await client.query(
-        `INSERT INTO vendors (name, email, password_hash, role, parent_id, permissions)
-         VALUES ($1, $2, $3, 'manager', $4, $5) RETURNING id`,
+        `INSERT INTO vendors (name, email, password, role, parent_id, permissions)
+         VALUES ($1, $2, $3, 'SUB_VENDOR', $4, $5) RETURNING id`,
         [
           region.name,
           `region.${region.name.split(" ")[0].toLowerCase()}@test.com`,
@@ -56,10 +54,9 @@ async function seedDatabase() {
       const regId = regRes.rows[0].id;
 
       for (const city of region.cities) {
-        // Create City Vendor
         const cityRes = await client.query(
-          `INSERT INTO vendors (name, email, password_hash, role, parent_id, permissions)
-           VALUES ($1, $2, $3, 'vendor', $4, $5) RETURNING id`,
+          `INSERT INTO vendors (name, email, password, role, parent_id, permissions)
+           VALUES ($1, $2, $3, 'SUB_VENDOR', $4, $5) RETURNING id`,
           [
             `${city} Operations`,
             `city.${city.toLowerCase().replace(" ", "")}@test.com`,
@@ -83,8 +80,8 @@ async function seedDatabase() {
           const dName =
             driverNames[Math.floor(Math.random() * driverNames.length)];
           await client.query(
-            `INSERT INTO drivers (name, license_number, license_type, vendor_id, contact_number)
-             VALUES ($1, $2, 'LMV', $3, '+919876543210')`,
+            `INSERT INTO drivers (name, license_no, vendor_id)
+             VALUES ($1, $2, $3)`,
             [
               `${dName} (${city})`,
               `DL-${city.substring(0, 2).toUpperCase()}-${Math.floor(
@@ -105,8 +102,8 @@ async function seedDatabase() {
           )}`;
           const model = vehicleModels[k % vehicleModels.length];
           await client.query(
-            `INSERT INTO vehicles (vendor_id, vehicle_number, vehicle_type, model, status)
-             VALUES ($1, $2, 'SUV', $3, 'available')`,
+            `INSERT INTO vehicles (vendor_id, reg_no, model, status)
+             VALUES ($1, $2, $3, 'ACTIVE')`,
             [cityId, vehicleNumber, model]
           );
         }
