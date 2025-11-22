@@ -5,10 +5,7 @@ const VendorModel = require("../models/VendorModel");
 class AuthService {
   async login(email, password) {
     const vendor = await VendorModel.findByEmail(email);
-    const isPasswordValid = await bcrypt.compare(
-      password,
-      vendor.password
-    );
+    const isPasswordValid = await bcrypt.compare(password, vendor.password);
 
     const jwtSecret =
       process.env.JWT_SECRET || "default_secret_change_in_production";
