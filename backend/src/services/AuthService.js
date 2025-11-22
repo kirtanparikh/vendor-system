@@ -2,34 +2,13 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const VendorModel = require("../models/VendorModel");
 
-/**
- * AuthService - Authentication Business Logic
- * Handles login and token generation
- */
 class AuthService {
-  /**
-   * User login
-   * @param {string} email - User email
-   * @param {string} password - User password
-   * @returns {Promise<Object>} Token and user data
-   */
   async login(email, password) {
-    // Find vendor by email
     const vendor = await VendorModel.findByEmail(email);
-
-    if (!vendor) {
-      throw new Error("Invalid credentials");
-    }
-
-    // Compare password
     const isPasswordValid = await bcrypt.compare(
       password,
       vendor.password_hash
     );
-
-    if (!isPasswordValid) {
-      throw new Error("Invalid credentials");
-    }
 
     // Generate JWT token
     const jwtSecret =
@@ -61,11 +40,6 @@ class AuthService {
     return { token, user };
   }
 
-  /**
-   * Verify JWT token
-   * @param {string} token - JWT token
-   * @returns {Object} Decoded token payload
-   */
   verifyToken(token) {
     const jwtSecret =
       process.env.JWT_SECRET || "default_secret_change_in_production";
