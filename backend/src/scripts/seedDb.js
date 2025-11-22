@@ -94,6 +94,22 @@ async function seedDatabase() {
             ]
           );
         }
+
+        // Create 3 Vehicles per City
+        const vehicleModels = ["Innova Crysta", "Ertiga", "Marazzo"];
+        const stateCodes =
+          city === "Delhi NCR" ? "DL" : city.substring(0, 2).toUpperCase();
+        for (let k = 0; k < 3; k++) {
+          const vehicleNumber = `${stateCodes}-01-AB-${Math.floor(
+            Math.random() * 9999
+          )}`;
+          const model = vehicleModels[k % vehicleModels.length];
+          await client.query(
+            `INSERT INTO vehicles (vendor_id, vehicle_number, vehicle_type, model, status)
+             VALUES ($1, $2, 'SUV', $3, 'available')`,
+            [cityId, vehicleNumber, model]
+          );
+        }
       }
       console.log(`✓ Created Region: ${region.name}`);
     }

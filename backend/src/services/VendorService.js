@@ -99,6 +99,47 @@ class VendorService {
       }
     }
 
+    // Fetch all drivers and attach them to their vendors
+    const drivers = await VendorModel.findAllDrivers();
+    for (const d of drivers) {
+      const driverNode = {
+        id: `driver-${d.id}`,
+        name: d.name,
+        role: "driver",
+        attributes: {
+          role: "driver",
+          id: `D-${d.id}`,
+          license_number: d.license_number,
+        },
+        children: [],
+      };
+
+      if (vendorMap[d.vendor_id]) {
+        vendorMap[d.vendor_id].children.push(driverNode);
+      }
+    }
+
+    // Fetch all vehicles and attach them to their vendors
+    const vehicles = await VendorModel.findAllVehicles();
+    for (const v of vehicles) {
+      const vehicleNode = {
+        id: `veh-${v.id}`,
+        name: v.vehicle_number,
+        role: "vehicle",
+        attributes: {
+          role: "vehicle",
+          id: `V-${v.id}`,
+          model: v.model,
+          status: v.status,
+        },
+        children: [],
+      };
+
+      if (vendorMap[v.vendor_id]) {
+        vendorMap[v.vendor_id].children.push(vehicleNode);
+      }
+    }
+
     // Cache the result for 10 minutes (600 seconds)
     await CacheService.set(cacheKey, roots, 600);
 

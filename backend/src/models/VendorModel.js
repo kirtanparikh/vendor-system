@@ -72,6 +72,31 @@ class VendorModel {
     const result = await pool.query(query, [id]);
     return result.rows[0] || null;
   }
+
+  /**
+   * Find all vehicles for hierarchy building
+   * @returns {Promise<Array>} Array of vehicles
+   */
+  async findAllVehicles() {
+    const query = `
+      SELECT id, vendor_id, vehicle_number, vehicle_type, model, status, created_at
+      FROM vehicles
+      ORDER BY id
+    `;
+    const result = await pool.query(query);
+    return result.rows;
+  }
+
+  /**
+   * Find all drivers for hierarchy building
+   * @returns {Promise<Array>} Array of drivers
+   */
+  async findAllDrivers() {
+    const query =
+      "SELECT id, name, vendor_id, license_number, status FROM drivers ORDER BY id";
+    const result = await pool.query(query);
+    return result.rows;
+  }
 }
 
 module.exports = new VendorModel();
