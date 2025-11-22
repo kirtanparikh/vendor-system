@@ -63,11 +63,27 @@ export default function Dashboard() {
         }
       );
       setTreeData(res.data.data);
-      // Stats logic...
       if (res.data.data.length) {
+        const countNodes = (nodes, targetRole) => {
+          let count = 0;
+          const traverse = (node) => {
+            const role = (
+              node.role ||
+              node.attributes?.role ||
+              ""
+            ).toLowerCase();
+            if (role === targetRole) count++;
+            if (node.children) node.children.forEach(traverse);
+          };
+          nodes.forEach(traverse);
+          return count;
+        };
+
         setStats({
           regions: res.data.data[0]?.children?.length || 0,
-          drivers: 45,
+          drivers:
+            countNodes(res.data.data, "driver") +
+            countNodes(res.data.data, "vehicle"),
         });
       }
     } catch (err) {
